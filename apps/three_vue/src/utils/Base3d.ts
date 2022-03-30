@@ -1,13 +1,17 @@
 import * as THREE from "three"
+import { Camera, Object3D } from "three";
 import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader"
 
 
 class Base3d {
+  // 初始属性没赋值，需要加!
+  container!: HTMLElement;
+  scene!: THREE.Scene;
+  renderer!: THREE.WebGLRenderer;
+  camera!: THREE.PerspectiveCamera;
+
   constructor(selector: string) {
     this.container = document.querySelector(selector) as HTMLElement
-    // this.camera;
-    // this.scene;
-    // this.renderer;
     this.init()
     this.animate()
   }
@@ -36,12 +40,12 @@ class Base3d {
   setEnvMap() {
     new RGBELoader().setPath('/hdr/').load('001.hdr', (texture) => {
       texture.mapping = THREE.EquirectangularRefractionMapping
-      this.scene.background = texture
-      this.scene.environment = texture
+      this.scene!.background = texture
+      this.scene!.environment = texture
     })
   }
   render() {
-    this.renderer.render(this.scene, this.camera)
+    this.renderer.render(this.scene as Object3D, this.camera as Camera)
   }
   animate() {
     this.renderer.setAnimationLoop(this.render.bind(this))
