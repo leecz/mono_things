@@ -1,0 +1,14 @@
+{
+  "name": "@mono/three",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc --noEmit && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@types/three": "^0.139.0",
+    "three": "^0.139.0"
+  }
+}

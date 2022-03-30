@@ -9,6 +9,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
+    "@types/lodash-es": "^4.17.6",
     "element-plus": "^2.1.4",
     "pinia": "^2.0.12",
     "vue": "^3.2.25",
