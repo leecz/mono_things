@@ -1,5 +1,5 @@
-import * as THREE from "three"
-import { Camera, Object3D } from "three";
+import { Scene, WebGLRenderer, PerspectiveCamera } from "three"
+import { Camera, Object3D, ACESFilmicToneMapping, EquirectangularRefractionMapping } from "three";
 import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader"
 // 控制器
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls"
@@ -9,9 +9,9 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader"
 class Base3d {
   // 初始属性没赋值，需要加!
   container!: HTMLElement;
-  scene!: THREE.Scene;
-  renderer!: THREE.WebGLRenderer;
-  camera!: THREE.PerspectiveCamera;
+  scene!: Scene;
+  renderer!: WebGLRenderer;
+  camera!: PerspectiveCamera;
 
   controls!: OrbitControls;
   model!: Object3D;
@@ -44,12 +44,12 @@ class Base3d {
   }
 
   initScene() {
-    this.scene = new THREE.Scene()
+    this.scene = new Scene()
     this.setEnvMap()
 
   }
   initCamera() {
-    this.camera = new THREE.PerspectiveCamera(
+    this.camera = new PerspectiveCamera(
       45, window.innerWidth / window.innerHeight, 0.5, 200
     )
     this.camera.position.set(-1.8, 0.6, 2.7)
@@ -59,20 +59,20 @@ class Base3d {
   }
 
   initRenderer() {
-    this.renderer = new THREE.WebGLRenderer({ antialias: true })
+    this.renderer = new WebGLRenderer({ antialias: true })
     // 设置屏幕像素比
     this.renderer.setPixelRatio(window.devicePixelRatio)
 
     this.renderer.setSize(window.innerWidth, window.innerHeight)
 
     // 设置映射, 电影级别
-    this.renderer.toneMapping = THREE.ACESFilmicToneMapping
+    this.renderer.toneMapping = ACESFilmicToneMapping
     this.renderer.toneMappingExposure = 1
     this.container.appendChild(this.renderer.domElement)
   }
   setEnvMap() {
     new RGBELoader().setPath('/hdr/').load('001.hdr', (texture) => {
-      texture.mapping = THREE.EquirectangularRefractionMapping
+      texture.mapping = EquirectangularRefractionMapping
       this.scene!.background = texture
       this.scene!.environment = texture
     })
