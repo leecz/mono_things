@@ -6,7 +6,7 @@ class Base3d {
   scene!: Scene;
   renderer!: WebGLRenderer;
   camera!: PerspectiveCamera;
-  cube!: Mesh;
+  cubes!: Mesh[];
 
   angle = 0
 
@@ -18,7 +18,7 @@ class Base3d {
   init() {
     this.initScene();
     this.initCamera();
-    this.initGeometry()
+    this.addCube()
     this.initRenderer()
     // this.rotateCube()
     window.addEventListener('resize', this.onWindowResize.bind(this))
@@ -35,7 +35,7 @@ class Base3d {
     this.camera = new PerspectiveCamera(
       75, window.innerWidth / window.innerHeight, 0.1, 1000
     )
-    this.camera.position.z = 2
+    this.camera.position.z = 10
     // this.camera.position.set(-1.8, 0.6, 2.7)
   }
   rotateCube() {
@@ -44,22 +44,33 @@ class Base3d {
       this.rotateCube()
     }, 100)
   }
-  initGeometry() {
-    // 创建几何体
-    const geometry = new BoxGeometry(1, 1, 1)
-    //  创建材质
-    const material = new MeshPhongMaterial({ color: 0x44aa88 })
-    // 创建网格
-    const cube = new Mesh(geometry, material)
-    this.cube = cube
-
-    this.scene.add(cube)
-
+  addCube() {
+    const cubes: Mesh[] = [0x44aa88, 0x229933, 0xaa4488].map(color => {
+      return this.initGeometry(color)
+    })
+    cubes.forEach((cube, index) => {
+      cube.position.x = index * 2
+      this.scene.add(cube)
+    })
+    this.cubes = cubes
     // 创建光源
     const light = new DirectionalLight(0xFFFFFF, 1)
     light.position.set(-1, 2, 4)
 
     this.scene.add(light)
+  }
+  initGeometry(color: number): Mesh {
+    // 创建几何体
+    const geometry = new BoxGeometry(1, 1, 1)
+    //  创建材质
+    const material = new MeshPhongMaterial({ color })
+    // 创建网格
+    const cube = new Mesh(geometry, material)
+    return cube
+    // this.cube = cube
+
+    // this.scene.add(cube)
+
   }
 
   initRenderer() {
@@ -77,8 +88,10 @@ class Base3d {
     time = time * 0.001
     // this.cube.rotation.x = this.angle
     // this.cube.rotation.y = this.angle
-    this.cube.rotation.x = time
-    this.cube.rotation.y = time
+    this.cubes.forEach(cube => {
+      cube.rotation.x = time
+      cube.rotation.y = time
+    })
     this.renderer.render(this.scene, this.camera)
     window.requestAnimationFrame(this.render.bind(this))
   }

@@ -6,7 +6,6 @@
   "scripts": {
     "dev:wx": "vite apps/wx_vue",
     "dev:admin": "vite apps/admin_vue",
-    "build:three": "vue-tsc --skipLibCheck && vite build apps/three_vue",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
