@@ -10,7 +10,8 @@ const msg = ref('你好 three')
 <template>
   <div class="grid grid-flow-col auto-cols-max gap-4">
     <router-link to="/girl">女孩模型</router-link>
-    <router-link to="/cube">立方体模型</router-link>
+    <router-link to="/cube">立方体1</router-link>
+    <router-link to="/cube2">立方体2</router-link>
   </div>
 </template>
 

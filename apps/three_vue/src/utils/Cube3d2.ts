@@ -1,17 +1,19 @@
 import { Scene, WebGLRenderer, PerspectiveCamera, BoxGeometry, MeshPhongMaterial, Mesh, DirectionalLight } from "three"
 
-class Cube3d {
+class Cube3d2 {
   // 初始属性没赋值，需要加!
   container!: HTMLElement;
   scene!: Scene;
   renderer!: WebGLRenderer;
   camera!: PerspectiveCamera;
   cubes!: Mesh[];
+  resizeObserver!: ResizeObserver;
 
   angle = 0
 
   constructor(selector: string) {
     this.container = document.querySelector(selector) as HTMLElement
+
     this.init()
     this.animate()
   }
@@ -21,11 +23,24 @@ class Cube3d {
     this.addCube()
     this.initRenderer()
     // this.rotateCube()
-    window.addEventListener('resize', this.onWindowResize.bind(this))
+    // window.addEventListener('resize', this._onWindowResize)
+    // 这个是 dom 级别的监听resize，比window级别更细粒度更准确，相信性能也更好
+    this.resizeObserver = new ResizeObserver(() => {
+      this.resizeCanvas()
+    })
+    this.resizeObserver.observe(this.container)
   }
-  onWindowResize() {
-    this.camera.aspect = window.innerWidth / window.innerHeight;
-    this.renderer.setSize(window.innerWidth, window.innerHeight)
+  resizeCanvas() {
+    const container = this.container
+    this.camera.aspect = container.clientWidth / container.clientHeight
+    this.camera.updateProjectionMatrix() //通知镜头更新视椎(视野)
+    // 这行实际就是设置 canvas 的width 和 height，很重要，不然就是默认的 300、150
+    this.renderer.setSize(container.clientWidth, container.clientHeight, false)
+  }
+  destroy() {
+    // window.removeEventListener('resize', this._onWindowResize)
+    console.log('remove obserer ')
+    this.resizeObserver.disconnect()
   }
 
   initScene() {
@@ -33,9 +48,10 @@ class Cube3d {
   }
   initCamera() {
     this.camera = new PerspectiveCamera(
-      75, window.innerWidth / window.innerHeight, 0.1, 1000
+      75, this.container.clientWidth / this.container.clientHeight, 0.1, 1000
     )
-    this.camera.position.z = 10
+    // camera 的位置，数字越大离物体越远，范围在在上面的0.1 到200之间
+    this.camera.position.z = 5
     // this.camera.position.set(-1.8, 0.6, 2.7)
   }
   rotateCube() {
@@ -76,9 +92,9 @@ class Cube3d {
   initRenderer() {
     this.renderer = new WebGLRenderer({ antialias: true })
     // 设置屏幕像素比
-    this.renderer.setPixelRatio(window.devicePixelRatio)
+    // this.renderer.setPixelRatio(window.devicePixelRatio)
+    this.resizeCanvas()
 
-    this.renderer.setSize(window.innerWidth, window.innerHeight)
     this.container.appendChild(this.renderer.domElement)
   }
 
@@ -91,6 +107,7 @@ class Cube3d {
       cube.rotation.x = time
       cube.rotation.y = time
     })
+
     this.renderer.render(this.scene, this.camera)
     window.requestAnimationFrame(this.render.bind(this))
   }
@@ -102,4 +119,4 @@ class Cube3d {
 
 
 }
-export default Cube3d
+export default Cube3d2
