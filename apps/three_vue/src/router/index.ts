@@ -5,6 +5,7 @@ const constantRoutes: Array<RouteRecordRaw> = [
   { path: "/girl", component: () => import("@/views/girl/Girl.vue") },
   { path: "/cube", component: () => import("@/views/simple/Cube.vue") },
   { path: "/cube2", component: () => import("@/views/simple/Cube2.vue") },
+  { path: "/geo", component: () => import("@/views/simple/Geo.vue") },
 ];
 
 const routes = [...constantRoutes];

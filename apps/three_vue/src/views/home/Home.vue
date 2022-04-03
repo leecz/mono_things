@@ -12,6 +12,7 @@ const msg = ref('你好 three')
     <router-link to="/girl">女孩模型</router-link>
     <router-link to="/cube">立方体1</router-link>
     <router-link to="/cube2">立方体2</router-link>
+    <router-link to="/geo">各种几何体</router-link>
   </div>
 </template>
 
